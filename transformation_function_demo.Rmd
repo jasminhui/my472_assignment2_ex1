@@ -1,0 +1,66 @@
+---
+title: "Transformation function demonstration"
+output: html_document
+date: "2023-10-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load tidyverse package
+library(tidyverse)
+```
+
+The following is the transformation function.
+
+```{r echo=TRUE}
+# Define a function that performs input transformation on a dataset
+transform_function <- function(data, type) {
+  # Ensure that dataset contains the columns 'height' and 'age'
+  if("height" %in% colnames(data) & "age" %in% colnames(data)) {
+    if (type == "yearly_growth") {
+    # Use the 'mutate' function to calculate yearly growth
+    data <- data %>%
+      mutate(yearly_growth = height / age)
+    } else if (type == "log_height") {
+      # Calculate natural logarithm of height
+      data <- data %>%
+        mutate(log_height = log(height))
+    } else {
+      stop("Transformation type is not available.")
+    }
+    return(data)
+  } else {
+    stop("There is no suitable data in this dataset to perform transformations.")
+  }
+}
+```
+
+This function would work on the built-in 'Loblolly' dataset in R.
+
+If the function is called on the dataset and the value of the second argument 'type' is set as "yearly_growth", the function outputs a transformed dataset with a new column showing the yearly growth of each seed. 
+
+```{r echo=TRUE}
+data(Loblolly)
+
+# Call function on 'loblolly' dataset to calculate yearly growth
+Loblolly_transformed_growth <- transform_function(Loblolly, "yearly_growth")
+
+# Print first few rows of transformed dataset
+head(Loblolly_transformed_growth)
+```
+
+If the function is called on the dataset and the value of the second argument 'type' is set as "log_height", the function outputs a transformed dataset with a new column showing the natural logarithm of the height of each seed. 
+
+```{r}
+# Call function on 'loblolly' dataset to calculate natural logarithm of height
+Loblolly_transformed_log_height <- transform_function(Loblolly, "log_height")
+
+# Print first few rows of transformed dataset
+head(Loblolly_transformed_log_height)
+```
+
+If the function is called on the dataset and the value of the second argument 'type' is set as, for example, "doubled_age", an error message appears stating that "Transformation type is not available.", because this type is not defined in the function.
+
